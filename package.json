@@ -1,20 +1,28 @@
 {
-  "name": "auth0TestBack",
+  "name": "cobbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "**Author**: Qaalid Hashi, Dave Arno **Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Qaalid Hashi, Dave Arno",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Barnord/can-of-books-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Barnord/can-of-books-backend/issues"
+  },
+  "homepage": "https://github.com/Barnord/can-of-books-backend#readme"
 }
