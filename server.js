@@ -15,19 +15,58 @@ const client = jwksClient({
 
 function getKey(header, callback) {
   client.getSingingKey(header.kid, function(err, key) {
-    var singingKey = key.publicKey || key.rsaPublicKey;
+    var signingKey = key.publicKey || key.rsaPublicKey;
     callback(null, signingKey);
   });
 }
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('MONGO ONLINE')
+});
+
+const Book = require('./models/Book');
+
+let goodBook = new Book({
+  name: 'The Martian',
+  description: 'Get you some potatoes',
+  status: 'unread',
+  email: 'bdarno92@gmail.com'
+})
+
+goodBook.save( (err, bookDataFromMongo) => {
+  console.log('book saved')
+  console.log(bookDataFromMongo);
+});
+
 const PORT = process.env.PORT || 3001;
 
-app.get('/test', (request, response) => {
+app.get('/*', (req, res) => {
+  console.log('HELLO THERE')
+})
 
-  // TODO: 
-  // STEP 1: get the jwt from the headers
+app.get('/books', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, getKey, {}, function(err, user) {
+    if(err) {
+      res.status(500).send('invalid token');
+    } else {
+      let userEmail = user.email;
+      Book.find({email: userEmail}, (err, books) => {
+        console.log(books);
+        res.send(books);
+      });
+    }
+  });
+});
+
+app.get('/test', (request, response) => {
   const token = request.headers.authorization.split(' ')[1];
-  // STEP 2. use the jsonwebtoken library to verify that it is a valid jwt
+
   jwt.verify(token, getKey, {}, function(err, user) {
     if (err) {
       response.status(500).send('invalid token');
@@ -35,9 +74,6 @@ app.get('/test', (request, response) => {
       response.send(user);
     }
   });
-  // jsonwebtoken dock - https://www.npmjs.com/package/jsonwebtoken
-  // STEP 3: to prove that everything is working correctly, send the opened jwt back to the front-end
-
 });
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
