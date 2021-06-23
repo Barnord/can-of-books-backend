@@ -32,10 +32,10 @@ db.once('open', function() {
 const Book = require('./models/Book');
 
 // let goodBook = new Book({
-//   name: 'World War Z',
-//   description: 'Better than the movie',
-//   status: 'read',
-//   email: 'q.hashi16@gmail.com'
+//   name: 'The Martian',
+//   description: 'Get you some potatoes',
+//   status: 'unread',
+//   email: 'bdarno92@gmail.com'
 // })
 
 // goodBook.save( (err, bookDataFromMongo) => {
@@ -66,7 +66,7 @@ app.get('/books', (req, res) => {
 
 app.get('/test', (request, response) => {
   const token = request.headers.authorization.split(' ')[1];
-
+  
   jwt.verify(token, getKey, {}, function(err, user) {
     if (err) {
       response.status(500).send('invalid token');
@@ -75,5 +75,9 @@ app.get('/test', (request, response) => {
     }
   });
 });
+
+app.get('/*', (req, res) => {
+  console.log('HELLO THERE')
+})
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
