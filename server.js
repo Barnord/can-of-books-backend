@@ -14,7 +14,7 @@ const client = jwksClient({
 });
 
 function getKey(header, callback) {
-  client.getSingingKey(header.kid, function(err, key) {
+  client.getSigningKey(header.kid, function(err, key) {
     var signingKey = key.publicKey || key.rsaPublicKey;
     callback(null, signingKey);
   });
@@ -31,23 +31,23 @@ db.once('open', function() {
 
 const Book = require('./models/Book');
 
-let goodBook = new Book({
-  name: 'The Martian',
-  description: 'Get you some potatoes',
-  status: 'unread',
-  email: 'bdarno92@gmail.com'
-})
+// let goodBook = new Book({
+//   name: 'World War Z',
+//   description: 'Better than the movie',
+//   status: 'read',
+//   email: 'q.hashi16@gmail.com'
+// })
 
-goodBook.save( (err, bookDataFromMongo) => {
-  console.log('book saved')
-  console.log(bookDataFromMongo);
-});
+// goodBook.save( (err, bookDataFromMongo) => {
+//   console.log('book saved')
+//   console.log(bookDataFromMongo);
+// });
 
 const PORT = process.env.PORT || 3001;
 
-app.get('/*', (req, res) => {
-  console.log('HELLO THERE')
-})
+// app.get('/*', (req, res) => {
+//   console.log('HELLO THERE')
+// })
 
 app.get('/books', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
