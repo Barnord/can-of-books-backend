@@ -8,6 +8,7 @@ const jwksClient = require('jwks-rsa');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const client = jwksClient({
   jwksUri: 'https://dev-3puoq3b1.us.auth0.com/.well-known/jwks.json'
@@ -30,6 +31,7 @@ db.once('open', function() {
 });
 
 const Book = require('./models/Book');
+const { getMaxListeners } = require('./models/Book');
 
 // let goodBook = new Book({
 //   name: 'The Martian',
@@ -64,17 +66,42 @@ app.get('/books', (req, res) => {
   });
 });
 
-app.get('/test', (request, response) => {
-  const token = request.headers.authorization.split(' ')[1];
-  
+app.post('/books', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, getKey, {}, function(err, user) {
     if (err) {
-      response.status(500).send('invalid token');
+      res.status(500).send('invalid token')
     } else {
-      response.send(user);
+      console.log(req.body);
+      const newBook = new Book({
+        name: req.body.name,
+        description: req.body.description,
+        status: req.body.status,
+        email: user.email
+      });
+      newBook.save((err, savedBookData) => {
+        res.send(savedBookData);
+      });
     }
   });
 });
+
+app.post('/test', (req,res) => {
+  console.log('At test route');
+  res.send('Ya hit yer target Jack')
+})
+
+// app.get('/test', (request, response) => {
+//   const token = request.headers.authorization.split(' ')[1];
+  
+//   jwt.verify(token, getKey, {}, function(err, user) {
+//     if (err) {
+//       response.status(500).send('invalid token');
+//     } else {
+//       response.send(user);
+//     }
+//   });
+// });
 
 app.get('/*', (req, res) => {
   console.log('HELLO THERE')
