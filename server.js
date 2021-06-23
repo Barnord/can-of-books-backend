@@ -45,6 +45,10 @@ const Book = require('./models/Book');
 
 const PORT = process.env.PORT || 3001;
 
+// app.get('/*', (req, res) => {
+//   console.log('HELLO THERE')
+// })
+
 app.get('/books', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, getKey, {}, function(err, user) {
