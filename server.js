@@ -82,6 +82,23 @@ app.post('/books', (req, res) => {
   });
 });
 
+app.delete('/books/:id', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, getKey, {}, function (err, user) {
+    if (err) {
+      res.status(500).send('invalid token')
+    } else {
+      let bookId = req.params.id;
+
+      Book.deleteOne({_id: bookId, email: user.email})
+      .then(deletedBookData => {
+        console.log(deletedBookData)
+        res.send('You have successfully deleted this book.')
+      });
+    }
+  });
+});
+
 app.post('/test', (req,res) => {
   console.log('At test route');
   res.send('Ya hit yer target Jack')
