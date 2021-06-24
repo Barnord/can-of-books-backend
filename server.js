@@ -86,7 +86,7 @@ app.post('/books', (req, res) => {
   });
 });
 
-app.updateBook('/books/:id', (req, res) => {
+app.post('/books/:id', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, getKey, {}, function(err, user) {
     if (err) {
