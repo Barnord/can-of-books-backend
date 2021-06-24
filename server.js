@@ -82,6 +82,24 @@ app.post('/books', (req, res) => {
   });
 });
 
+app.updateBook('/books/:id', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, getKey, {}, function(err, user) {
+    if (err) {
+      res.status(500).send('invalid token');
+    } else {
+      Book.findOne({_id: req.params.id, email: user.email}).then(foundBook => {
+        console.log(foundBook);
+        foundBook.name = req.body.name;
+        foundBook.description = req.body.description;
+        foundBook.status = req.body.status;
+        foundBook.save()
+          .then(savedBook => res.send(savedBook));
+      });
+    }
+  });
+});
+
 app.delete('/books/:id', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, getKey, {}, function (err, user) {
