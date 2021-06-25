@@ -82,7 +82,7 @@ app.post('/books', (req, res) => {
   });
 });
 
-app.post('/books/:id', (req, res) => {
+app.put('/books/:id', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, getKey, {}, function(err, user) {
     if (err) {
@@ -121,18 +121,6 @@ app.post('/test', (req,res) => {
   console.log('At test route');
   res.send('Ya hit yer target Jack')
 })
-
-// app.get('/test', (request, response) => {
-//   const token = request.headers.authorization.split(' ')[1];
-  
-//   jwt.verify(token, getKey, {}, function(err, user) {
-//     if (err) {
-//       response.status(500).send('invalid token');
-//     } else {
-//       response.send(user);
-//     }
-//   });
-// });
 
 app.get('/*', (req, res) => {
   console.log('HELLO THERE')
